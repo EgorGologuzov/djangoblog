@@ -1,0 +1,77 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<div class="container my-5" style="max-width: 720px;">
+
+  {% if article %}
+
+    <h6 class="card-subtitle mb-2 text-muted">Просмотр статьи: «{{ article.title }}»</h6>
+    <h6 class="card-subtitle mb-4 text-muted">{{ article.create_at|date:"d M Y" }}</h6>
+
+    {{ article.content_html|safe }}
+
+    <h2 class="my-4">Комментарии</h2>
+
+    <form action="{% url 'article' article.id %}" method="post" class="mb-4">
+
+      {% csrf_token %}
+
+      <label for="sender_name" class="form-label">Ваше имя<b class="text-danger">*</b>:</label><br>
+      <input
+        class="form-control {% if form.sender_name.errors %}is-invalid{% endif %}"
+        name="sender_name"
+        type="text"
+        placeholder="Введеите имя"
+      />
+      {% if form.sender_name.errors %}
+      <div class="invalid-feedback">Это обязательное поле. Макс. длина 100 символов.</div>
+      {% endif %}
+
+      <br>
+
+      <label for="text" class="form-label">Текст комментария<b class="text-danger">*</b>:</label><br>
+      <textarea
+        class="form-control {% if form.text.errors %}is-invalid{% endif %}"  
+        name="text"
+        placeholder="Введеите текст"
+        maxlength="1000"
+        rows="5"
+      ></textarea>
+      {% if form.text.errors %}
+      <div class="invalid-feedback">Это обязательное поле. Макс. длина 1000 символов.</div>
+      {% endif %}
+        
+      <br>
+
+      <input class="btn btn-primary" type="submit" value="Опубликовать">
+
+    </form>
+
+    {% if comments %}
+
+      <div class="row">
+        {% for comment in comments %}
+          <div class="col-12 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">{{ comment.sender_name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ comment.send_at|date:"d M Y H:i" }}</h6>
+                <p class="card-text">{{ comment.text }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+    {% endif %}
+
+  {% else %}
+
+    <div class="alert alert-info" role="alert">
+      Статья не найдена.
+    </div>
+
+  {% endif %}
+
+</div>
+{% endblock %}

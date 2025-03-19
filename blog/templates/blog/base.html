@@ -1,0 +1,30 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Django Blog</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+
+<body>
+
+    <header class="bg-primary text-white py-2">
+      <div class="container">
+        <a href="{% url 'index' %}"><h2 class="text text-white">Django Blog</h2></a>
+      </div>
+    </header>
+
+    {% block content %}
+    {% endblock %}
+
+    <footer class="bg-light text-center py-3">
+      <p class="my-1">&copy; 2025 Django Blog. Все права защищены.</p>
+    </footer>
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Список статей</h2>
+  
+  {% if articles %}
+
+    <div class="row">
+      {% for article in articles %}
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ article.title }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ article.create_at|date:"d M Y" }}</h6>
+              <p class="card-text">{{ article.get_clear_text|slice:":200" }}...</p>
+              <a href="{% url 'article' article.id %}" class="btn btn-primary">Читать далее</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination d-flex justify-content-center">
+        {% if articles.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="{% url 'index'%}?page={{ articles.previous_page_number }}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        {% endif %}
+        
+        {% for num in pages_nums %}
+          <li class="page-item {% if articles.number == num %} active {% endif %}">
+            <a class="page-link" href="{% url 'index'%}?page={{ num }}">
+              {{ num }}
+            </a>
+          </li>
+        {% endfor %}
+
+        {% if articles.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="{% url 'index'%}?page={{ articles.next_page_number }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+  {% else %}
+
+    <div class="alert alert-info" role="alert">
+      Нет доступных статей.
+    </div>
+
+  {% endif %}
+
+</div>
+{% endblock %}
