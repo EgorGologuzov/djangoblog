@@ -6,8 +6,15 @@
   {% if article %}
 
     <h6 class="card-subtitle mb-2 text-muted">Просмотр статьи: «{{ article.title }}»</h6>
-    <h6 class="card-subtitle mb-4 text-muted">{{ article.create_at|date:"d M Y" }}</h6>
+    <h6 class="card-subtitle mb-3 text-muted">{{ article.create_at|date:"d M Y" }}</h6>
 
+    {% if categories %}
+      <div class="d-flex flex-row mb-2">
+        {% for cat in categories %}
+          <span class="badge text-bg-primary">{{ cat }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
     
     {% if article.content_html_text %}
       {{ article.content_html_text|safe }}
@@ -24,7 +31,7 @@
       <label for="sender_name" class="form-label">Ваше имя<b class="text-danger">*</b>:</label>
       <input
         class="form-control {% if form.sender_name.errors %}is-invalid{% endif %}"
-        name="sender_name"
+        name="sender_name" id="sender_name"
         type="text"
         placeholder="Введеите имя"
       />
@@ -37,7 +44,7 @@
       <label for="text" class="form-label">Текст комментария<b class="text-danger">*</b>:</label>
       <textarea
         class="form-control {% if form.text.errors %}is-invalid{% endif %}"  
-        name="text"
+        name="text" id="text"
         placeholder="Введеите текст"
         maxlength="1000"
         rows="5"

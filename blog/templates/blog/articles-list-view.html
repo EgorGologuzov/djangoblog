@@ -3,6 +3,21 @@
 {% block content %}
 <div class="container mt-5">
   <h2 class="mb-4">Список статей</h2>
+
+  <div class="d-flex flex-row mb-2">
+      <a
+        href="{% url 'index'%}?page=1"
+        class="btn me-2 mb-2 {% if not category %} btn-primary {% else %} btn-light {% endif %}">
+        Все
+      </a>
+      {% for cat in categories %}
+        <a
+          href="{% url 'index'%}?page=1&category={{ cat.name }}"
+          class="btn me-2 mb-2 {% if category == cat.name %} btn-primary {% else %} btn-light {% endif %}">
+          {{ cat.name }}
+        </a>
+      {% endfor %}
+  </div>
   
   {% if articles %}
 
@@ -24,29 +39,13 @@
 
     <nav aria-label="Page navigation example">
       <ul class="pagination d-flex justify-content-center">
-        {% if articles.has_previous %}
-          <li class="page-item">
-            <a class="page-link" href="{% url 'index'%}?page={{ articles.previous_page_number }}" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-        {% endif %}
-        
         {% for num in pages_nums %}
           <li class="page-item {% if articles.number == num %} active {% endif %}">
-            <a class="page-link" href="{% url 'index'%}?page={{ num }}">
+            <a class="page-link" href="{% url 'index'%}?page={{ num }}{% if category %}&category={{ category }}{% endif %}">
               {{ num }}
             </a>
           </li>
         {% endfor %}
-
-        {% if articles.has_next %}
-          <li class="page-item">
-            <a class="page-link" href="{% url 'index'%}?page={{ articles.next_page_number }}" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        {% endif %}
       </ul>
     </nav>
 

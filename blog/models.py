@@ -57,3 +57,10 @@ class Image(models.Model):
   def __str__(self):
     return f"{self.name} ({self.file.url})"
 
+
+class Category(models.Model):
+  name = models.CharField(max_length=50, primary_key=True)
+
+  def __str__(self):
+    return self.name
+
