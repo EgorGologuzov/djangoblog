@@ -9,14 +9,34 @@ class Article(models.Model):
   title = models.CharField(max_length=150, null=False, default="[Title not set]")
   category_list_json = models.CharField(max_length=1000, null=False, default="[]")
   avatar = models.CharField(max_length=200, blank=True, null=True, default=None)
-  content_html = models.CharField(max_length=10_000_000, null=False, default="<p>[Content not set]</p>")
+  content_html = models.FileField(upload_to='articles', null=True, blank=False)
+  content_preview = models.CharField(max_length=200, blank=True)
   is_visible = models.BooleanField(null=False, default=True)
+
+  __content_html_text__ = None
 
   def __str__(self):
     return f"[{self.id}] {self.title} ({self.create_at})"
   
-  def get_clear_text(self):
-    return remove_html_tags(self.content_html)
+  @property
+  def content_html_text(self):
+    if self.__content_html_text__:
+      return self.__content_html_text__
+
+    if self.content_html:
+      with open(self.content_html.path, 'r', encoding='utf-8') as f:
+        self.__content_html_text__ = f.read()
+        return self.__content_html_text__
+      
+    return None
+  
+  def save(self, *args, **kwargs):
+    super(Article, self).save(*args, **kwargs)
+
+    if not self.content_preview and self.content_html_text:
+      self.content_preview = remove_html_tags(self.content_html_text)[:100]
+      
+    super(Article, self).save(*args, **kwargs)
   
 
 class Comment(models.Model):

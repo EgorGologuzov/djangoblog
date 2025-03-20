@@ -1,22 +1,27 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-<div class="container my-5" style="max-width: 720px;">
+<div class="article-container container my-5" style="max-width: 720px;">
 
   {% if article %}
 
     <h6 class="card-subtitle mb-2 text-muted">Просмотр статьи: «{{ article.title }}»</h6>
     <h6 class="card-subtitle mb-4 text-muted">{{ article.create_at|date:"d M Y" }}</h6>
 
-    {{ article.content_html|safe }}
+    
+    {% if article.content_html_text %}
+      {{ article.content_html_text|safe }}
+    {% else %}
+      <div class="alert alert-info" role="alert">Статья пуста.</div>
+    {% endif %}
 
     <h2 class="my-4">Комментарии</h2>
 
-    <form action="{% url 'article' article.id %}" method="post" class="mb-4">
+    <form action="{% url 'article' article.id %}" method="post" class="mb-4 d-flex flex-column">
 
       {% csrf_token %}
 
-      <label for="sender_name" class="form-label">Ваше имя<b class="text-danger">*</b>:</label><br>
+      <label for="sender_name" class="form-label">Ваше имя<b class="text-danger">*</b>:</label>
       <input
         class="form-control {% if form.sender_name.errors %}is-invalid{% endif %}"
         name="sender_name"
@@ -24,12 +29,12 @@
         placeholder="Введеите имя"
       />
       {% if form.sender_name.errors %}
-      <div class="invalid-feedback">Это обязательное поле. Макс. длина 100 символов.</div>
+        <div class="invalid-feedback">Это обязательное поле. Макс. длина 100 символов.</div>
       {% endif %}
 
       <br>
 
-      <label for="text" class="form-label">Текст комментария<b class="text-danger">*</b>:</label><br>
+      <label for="text" class="form-label">Текст комментария<b class="text-danger">*</b>:</label>
       <textarea
         class="form-control {% if form.text.errors %}is-invalid{% endif %}"  
         name="text"
@@ -43,7 +48,7 @@
         
       <br>
 
-      <input class="btn btn-primary" type="submit" value="Опубликовать">
+      <input class="btn btn-primary align-self-end" type="submit" value="Опубликовать">
 
     </form>
 
@@ -67,9 +72,7 @@
 
   {% else %}
 
-    <div class="alert alert-info" role="alert">
-      Статья не найдена.
-    </div>
+    <div class="alert alert-info" role="alert">Статья не найдена.</div>
 
   {% endif %}
 

@@ -8,13 +8,14 @@
 
     <div class="row">
       {% for article in articles %}
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-4 d-flex align-items-stretch">
           <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">{{ article.title }}</h5>
+            <div class="card-body d-flex flex-column">
+              <img src="{% if article.avatar != None %}{{ article.avatar }}{% else %}/media/images/8136031.png{% endif %}" class="card-img-top" alt="Аватар статьи">
+              <h5 class="card-title my-2">{{ article.title }}</h5>
               <h6 class="card-subtitle mb-2 text-muted">{{ article.create_at|date:"d M Y" }}</h6>
-              <p class="card-text">{{ article.get_clear_text|slice:":200" }}...</p>
-              <a href="{% url 'article' article.id %}" class="btn btn-primary">Читать далее</a>
+              <p class="card-text">{{ article.content_preview }}...</p>
+              <a href="{% url 'article' article.id %}" class="btn btn-primary mt-auto align-self-start w-100">Читать далее</a>
             </div>
           </div>
         </div>
